@@ -172,6 +172,18 @@ void decsec(byte sub) {
   }//sec
 }
 
+void addMinute(byte minuteToAdd) {
+  sec = 0;
+  if (minute==59) { minute = 0; } 
+  else { minute++; }
+}
+
+void addHour() {
+  sec=0;
+  if (hour==23) { hour = 0; } 
+  else { hour++; }
+}
+
 byte clockhandler(void) {
   if (sec==sec0) return 0;   //check if something changed
   sec0=sec;
@@ -214,9 +226,9 @@ int main(void) {  //============================================================
   hour=12;minute=02;
 
   while(1){ 
-         if (key1) {if (changing>250) incsec(20); else {changing++; incsec(1);} }
-    else if (key2) {if (changing>250) decsec(20); else {changing++; decsec(1);} }
-    else if (key3) {if (!changing) {changing=1; bright=(bright+1)%4; HTbrightness(brights[bright]);} } //only once per press
+         if (key1) {if (!changing) { changing=1; addHour(); _delay_ms(5);} }
+    else if (key2) {if (!changing) { changing=1; addMinute(1); _delay_ms(5);} }
+    else if (key3) {if (!changing) {changing=1; HTcommand(HTblinkon); bright=(bright+1)%4; HTbrightness(brights[bright]);} } //only once per press
     else changing=0;
 
     if(clockhandler()) { renderclock(); HTsendscreen(); }
